@@ -8,21 +8,6 @@
 
 char*               ssid_pfix = (char*)"CaptivePortal";
 String              user_config_html = "";      
-/*
- *  ConfigPortal library to extend and implement the WiFi connected IOT device
- *
- *  Yoonseok Hur
- *
- *  Usage Scenario:
- *  0. copy the example template in the README.md
- *  1. Modify the ssid_pfix to help distinquish your Captive Portal SSID
- *          char   ssid_pfix[];
- *  2. Modify user_config_html to guide and get the user config data through the Captive Portal
- *          String user_config_html;
- *  2. declare the user config variable before setup
- *  3. In the setup(), read the cfg["meta"]["your field"] and assign to your config variable
- *
- */
 
 SSD1306             display(0x3c, 4, 5, GEOMETRY_128_32);
 
@@ -82,7 +67,7 @@ void setup() {
     // main setup
     Serial.printf("\nIP address : "); Serial.println(WiFi.localIP());
 
-    if (MDNS.begin("miniwifi")) {
+    if (MDNS.begin("wonaz")) {
         Serial.println("MDNS responder started");
     }   
     webServer.begin();
