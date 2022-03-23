@@ -9,6 +9,7 @@
 char*               ssid_pfix = (char*)"CaptivePortal";
 String              user_config_html = "";      
 
+// DHT22, OLED setup
 SSD1306             display(0x3c, 4, 5, GEOMETRY_128_32);
 
 DHTesp              dht;
@@ -28,7 +29,7 @@ void readDHT22() {
     }
 }
 
-void handleRoot(){
+void handleRoot(){ // basic page setup
   String message = (webServer.method() == HTTP_GET)?"GET":"POST";
   message +=" "+webServer.uri()+"\n";
   for(uint8_t i=0; i<webServer.args(); i++){
@@ -38,12 +39,12 @@ void handleRoot(){
   webServer.send(200,"text/plain",message);
 }
 
-void Show_Temp() {
+void Show_Temp() { // send Temperature to WebServer
     String message = "Teamperature: " + String(temperature);
     webServer.send(200, "text/plain", message);
 }
 
-void Show_Humi() {
+void Show_Humi() { // send humidity to WebServer
     String message = "Humidity: " + String(humidity);
     webServer.send(200, "text/plain", message);
 }
@@ -70,18 +71,23 @@ void setup() {
     if (MDNS.begin("wonaz")) {
         Serial.println("MDNS responder started");
     }   
-    webServer.begin();
+    webServer.begin(); // start webServer
     webServer.on("/", handleRoot); 
+
+    // Create /Show_Temp, /Show_Humi command
     webServer.on("/Show_Temp", Show_Temp);
     webServer.on("/Show_Humi", Show_Humi);
-    webServer.on("/inline",[](){
+
+    /* webServer.on("/inline",[](){
     webServer.send(200,"text/plain","Hello from the inline function \n");
-    });
+    }); */
+
 }
 
 void loop() {
     MDNS.update();
     webServer.handleClient();
+    //Function that display Temp, Humi using OLED
     readDHT22();
     display.init(); 
     display.flipScreenVertically();
